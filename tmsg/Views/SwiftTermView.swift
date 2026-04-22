@@ -22,8 +22,8 @@ class FocusableTerminalView: NSView {
     required init?(coder: NSCoder) { fatalError() }
 
     override func mouseDown(with event: NSEvent) {
-        window?.makeFirstResponder(terminalView)
-        super.mouseDown(with: event)
+        grabFocus()
+        terminalView.mouseDown(with: event)
     }
 
     override var acceptsFirstResponder: Bool { true }
@@ -35,11 +35,18 @@ class FocusableTerminalView: NSView {
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
-        // Auto-focus when added to a window
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self, let window = self.window else { return }
-            window.makeFirstResponder(self.terminalView)
+        // Activate app + grab focus with staggered retries
+        for delay in [0.1, 0.3, 0.6] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                self?.grabFocus()
+            }
         }
+    }
+
+    private func grabFocus() {
+        NSApp.activate(ignoringOtherApps: true)
+        window?.makeKey()
+        window?.makeFirstResponder(terminalView)
     }
 }
 
