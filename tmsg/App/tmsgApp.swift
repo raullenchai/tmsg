@@ -1,7 +1,17 @@
 import SwiftUI
+import AppKit
+
+/// Ensure bare binary (non-.app bundle) registers as a foreground app
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+}
 
 @main
 struct tmsgApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var sessionManager = SessionManager()
 
     var body: some Scene {
