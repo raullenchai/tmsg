@@ -1,0 +1,37 @@
+name: tmsg
+options:
+  bundleIdPrefix: com.raul.tmsg
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38"
+
+packages:
+  SwiftTerm:
+    url: https://github.com/migueldeicaza/SwiftTerm
+    from: "1.2.0"
+
+targets:
+  tmsg:
+    type: application
+    platform: macOS
+    sources:
+      - tmsg
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.raul.tmsg
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: 1
+        SWIFT_VERSION: "6.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.developer-tools"
+        INFOPLIST_KEY_CFBundleDisplayName: "tmsg"
+    dependencies:
+      - package: SwiftTerm
+        product: SwiftTerm
+    entitlements:
+      path: tmsg/tmsg.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+        com.apple.security.network.client: true
