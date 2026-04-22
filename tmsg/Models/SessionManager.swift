@@ -125,7 +125,8 @@ class SessionManager: ObservableObject {
     func markAsRead(_ sessionId: UUID) {
         if let idx = sessions.firstIndex(where: { $0.id == sessionId }) {
             sessions[idx].unreadCount = 0
-            sessions[idx].lastActiveAt = Date()
+            // WhatsApp behavior: reading a chat does NOT change its sort position.
+            // Only new output (in updateLastOutput) moves a session up.
             saveSessions()
         }
         UserDefaults.standard.set(sessionId.uuidString, forKey: selectedIdKey)
