@@ -10,19 +10,11 @@ struct ContentView: View {
 
             Rectangle().fill(Theme.divider).frame(width: 1)
 
-            // Keep ALL terminal views alive, show/hide based on selection.
-            // This preserves scrollback and terminal state when switching.
-            ZStack {
-                ForEach(sessionManager.sessions.filter { !$0.isArchived }) { session in
-                    let isVisible = session.id == sessionManager.selectedSessionId
-                    TerminalContainerView(session: session)
-                        .opacity(isVisible ? 1 : 0)
-                        .allowsHitTesting(isVisible)
-                }
-
-                if sessionManager.selectedSession == nil {
-                    emptyState
-                }
+            if let session = sessionManager.selectedSession {
+                TerminalContainerView(session: session)
+                    .id(session.id)
+            } else {
+                emptyState
             }
         }
         .background(Theme.chatBg)
